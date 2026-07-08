@@ -1,21 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TableOfContents from '../components/TableOfContents.astro';
-import PRCard from '../components/PRCard.astro';
 import '../styles/global.css';
-import prs from '../data/prs.json';
-
-const wordCount = 6200;
-const readingTime = Math.ceil(wordCount / 220);
 ---
 
 <BaseLayout>
-  <!-- Sticky top nav -->
   <header class="site-nav">
     <div class="site-nav-inner">
-      <a href="#" class="nav-brand">
-        Om Mukherjee <span>/ MetaBrainz Internship 2026</span>
-      </a>
       <div class="nav-actions">
         <button id="mobile-toc-btn" class="mobile-toc-btn" aria-label="Table of contents">
           ≡ Contents
@@ -25,7 +16,6 @@ const readingTime = Math.ceil(wordCount / 220);
     </div>
   </header>
 
-  <!-- Mobile TOC drawer -->
   <div id="mobile-toc-drawer" class="mobile-toc-drawer" role="dialog" aria-label="Table of contents">
     <div class="mobile-toc-panel">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
@@ -37,66 +27,28 @@ const readingTime = Math.ceil(wordCount / 220);
     </div>
   </div>
 
-  <!-- Hero -->
   <div style="max-width:1280px; margin:0 auto; padding:0 1.5rem;">
     <section class="hero-section">
-      <div class="hero-eyebrow">Engineering Case Study</div>
       <h1 class="hero-title">
-        Building a Cross-Page User Onboarding System for ListenBrainz
+        Building a Cross Page User Onboarding System for ListenBrainz
       </h1>
-      <div class="hero-subtitle">
-        <span>Om Mukherjee</span>
-        <span class="hero-divider">·</span>
-        <span>Software Engineering Intern</span>
-        <span class="hero-divider">·</span>
-        <span>MetaBrainz Foundation</span>
-        <span class="hero-divider">·</span>
-        <span>May 2026 – July 2026</span>
-      </div>
       <div class="hero-stack">
         {["React", "TypeScript", "Flask", "Python", "PostgreSQL", "TimescaleDB", "Docker", "React Joyride", "MutationObserver", "SCSS"].map(t => (
           <span class="stack-badge">{t}</span>
         ))}
       </div>
-      <div class="hero-ctas">
-        <a href="TODO_REPO_URL" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
-          ↗ Repository
-        </a>
-        <a href="#pull-requests" class="btn btn-outline">
-          ⎇ Pull Requests
-        </a>
-        <a href="TODO_RESUME_URL" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
-          ↓ Resume
-        </a>
-      </div>
     </section>
   </div>
 
-  <!-- Main layout: TOC sidebar + article content -->
   <div class="page-shell">
-    <!-- Desktop sidebar TOC -->
     <aside class="toc-sidebar" aria-label="Table of contents">
       <TableOfContents />
     </aside>
 
-    <!-- Article content — rendered from MDX -->
     <main class="main-content" id="main-content">
-      <div class="reading-meta">
-        <span>~{readingTime} min read</span>
-        <span>·</span>
-        <span>~{wordCount.toLocaleString()} words</span>
-        <span>·</span>
-        <span>Summer 2026</span>
-      </div>
 
       <article class="prose" id="prose-content">
-        <!-- Content injected from slot (MDX page wraps this layout) -->
         <slot />
-
-        <!-- Pull Requests section (rendered from JSON, outside MDX) -->
-        <div id="pull-requests-container">
-          {prs.map((pr: any) => <PRCard pr={pr} />)}
-        </div>
       </article>
     </main>
   </div>
