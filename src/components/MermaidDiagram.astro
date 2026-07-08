@@ -1,0 +1,18 @@
+---
+// MermaidDiagram.astro
+// Renders a Mermaid diagram using the Mermaid.js CDN script loaded in BaseLayout.
+//
+// Usage in .astro files:
+//   <MermaidDiagram label="System Architecture" code={systemArchDiagram} />
+//
+// Where systemArchDiagram is a string variable defined in the frontmatter.
+
+const { label, code } = Astro.props;
+---
+
+<div class="mermaid-wrapper">
+  {label && <div class="mermaid-label">{label}</div>}
+  <div class="mermaid-content">
+    <pre class="mermaid" set:html={code} />
+  </div>
+</div>

@@ -1,0 +1,54 @@
+---
+// TableOfContents.astro
+// Hardcoded TOC matching the sections in case-study.mdx
+// Active state is driven by IntersectionObserver in BaseLayout.astro
+
+const sections = [
+  { id: "overview",               label: "Overview" },
+  { id: "problem-statement",      label: "Problem Statement" },
+  { id: "original-design",        label: "Original Design" },
+  { id: "implementation-overview",label: "Implementation Overview" },
+  { id: "architecture",           label: "Architecture" },
+  { id: "database",               label: "Database" },
+  { id: "backend",                label: "Backend" },
+  { id: "frontend",               label: "Frontend" },
+  { id: "cross-page-navigation",  label: "Cross-Page Navigation" },
+  { id: "interactive-tours",      label: "Interactive Tours",
+    children: [
+      { id: "setup-tour",   label: "Setup Tour" },
+      { id: "listens-tour", label: "Listens Tour" },
+      { id: "stats-tour",   label: "Stats Tour" },
+      { id: "social-tour",  label: "Social Tour" },
+    ]
+  },
+  { id: "feature-guide",          label: "Feature Guide" },
+  { id: "ui-integration",         label: "UI Integration" },
+  { id: "styling",                label: "Styling" },
+  { id: "challenges",             label: "Challenges" },
+  { id: "screenshots",            label: "Screenshots" },
+  { id: "videos",                 label: "Videos" },
+  { id: "pull-requests",          label: "Pull Requests" },
+  { id: "lessons-learned",        label: "Lessons Learned" },
+  { id: "future-improvements",    label: "Future Improvements" },
+];
+---
+
+<nav class="toc-nav" aria-label="Table of contents">
+  <div class="toc-label">On this page</div>
+  <ul class="toc-list">
+    {sections.map(section => (
+      <li>
+        <a class="toc-link" href={`#${section.id}`}>{section.label}</a>
+        {section.children && (
+          <ul class="toc-list">
+            {section.children.map(child => (
+              <li>
+                <a class="toc-link" href={`#${child.id}`}>{child.label}</a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </li>
+    ))}
+  </ul>
+</nav>

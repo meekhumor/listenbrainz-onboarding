@@ -1,0 +1,111 @@
+[
+  {
+    "number": 1,
+    "title": "feat: Add user_onboarding_state database table and migration",
+    "description": "Introduces the user_onboarding_state table to track per-user, per-tour progress, unlock state, and resume position. Includes migration script and updates to all schema definition files.",
+    "status": "merged",
+    "issue": null,
+    "merged_at": "TODO: Add merged date",
+    "url": "TODO: Add PR URL",
+    "files": [
+      "2026-07-05-create-user-onboarding-state.sql",
+      "create_tables.sql",
+      "create_primary_keys.sql",
+      "create_indexes.sql",
+      "create_foreign_keys.sql"
+    ],
+    "details": "Designed the composite primary key (user_id, tour_id) to avoid a surrogate key while enforcing one row per user per tour. The unlock_ready flag is write-once — once flipped to TRUE the server never re-runs the unlock query for that tour+user combination, providing idempotency guarantees. ON DELETE CASCADE on user_id ensures no orphan rows when users delete their accounts.",
+    "lessons": "Writing the schema before the API forced clear thinking about what state needed to be server-authoritative vs. client-local. Early schema decisions (composite PK, write-once unlock flag) saved significant refactoring effort later."
+  },
+  {
+    "number": 2,
+    "title": "feat: Add GET/POST /1/user/{username}/onboarding API endpoints",
+    "description": "Implements the Flask API blueprint for reading and writing onboarding state. GET evaluates server-side unlock conditions and returns the full tour state payload. POST upserts tour progress. Also seeds the setup tour row on new user registration.",
+    "status": "merged",
+    "issue": null,
+    "merged_at": "TODO: Add merged date",
+    "url": "TODO: Add PR URL",
+    "files": [
+      "listenbrainz/db/onboarding.py",
+      "listenbrainz/webserver/views/api/onboarding_api.py",
+      "listenbrainz/webserver/__init__.py",
+      "listenbrainz/domain/auth/provider.py"
+    ],
+    "details": "Unlock conditions are evaluated server-side on every GET request, but only for tours where unlock_ready = FALSE. This avoids running potentially expensive queries (TimescaleDB listen counts, stat aggregations) for tours that are already unlocked. The _check_unlock_conditions function is composed of three independent query runners, making it easy to add new tours later.",
+    "lessons": "Keeping unlock evaluation server-side proved important for correctness — it prevents any client-side manipulation of which tours appear unlocked. The write-once unlock pattern required careful thought about race conditions in concurrent GET requests."
+  },
+  {
+    "number": 3,
+    "title": "feat: Add useTour hook and GlobalAppContext onboardingState integration",
+    "description": "Core frontend infrastructure PR. Implements the useTour hook (state machine managing Joyride run/stepIndex/paused), integrates onboardingState into GlobalAppContext, adds waitForElement.ts MutationObserver utility, and implements viewport-aware step overrides via useViewportBreakpoints.ts.",
+    "status": "merged",
+    "issue": null,
+    "merged_at": "TODO: Add merged date",
+    "url": "TODO: Add PR URL",
+    "files": [
+      "frontend/js/src/hooks/useTour.ts",
+      "frontend/js/src/utils/waitForElement.ts",
+      "frontend/js/src/hooks/useViewportBreakpoints.ts",
+      "frontend/js/src/context/GlobalAppContext.tsx"
+    ],
+    "details": "The useTour hook is the core state machine. It synchronizes between three state sources: Joyride's internal state, localStorage (fast restore on refresh), and the API (persistent across devices). The MutationObserver in waitForElement.ts resolves the cross-page DOM synchronization problem: it fires exactly when the target element appears, with no polling overhead. An automatic 10-second timeout disconnects the observer to prevent memory leaks if navigation fails.",
+    "lessons": "The MutationObserver approach required understanding when to observe (after navigate() is called but before Joyride runs) and when to disconnect (after the target resolves). Getting the timing right between React Router's navigation and DOM commitment required careful sequencing with async/await."
+  },
+  {
+    "number": 4,
+    "title": "feat: Implement SetupTourManager with cross-page navigation and TourModal",
+    "description": "Ships the first interactive guided tour. SetupTourManager teaches new users how to connect a music service and submit listens. Crosses 4 different routes using the MutationObserver-based waitForElement strategy. Includes custom tooltip component and TourModal for welcome/resume prompts.",
+    "status": "merged",
+    "issue": null,
+    "merged_at": "TODO: Add merged date",
+    "url": "TODO: Add PR URL",
+    "files": [
+      "frontend/js/src/components/tours/SetupTourManager.tsx",
+      "frontend/js/src/components/tours/TourManager.tsx",
+      "frontend/js/src/components/tours/TourModal.tsx",
+      "frontend/js/src/components/tours/CustomTooltip.tsx",
+      "frontend/js/src/layout/index.tsx"
+    ],
+    "details": "Step 5 (Add listens dropdown) required programmatic dropdown opening before mounting the step spotlight. This was solved using a custom onBeforeRun callback that clicks .add-listen-btn before Joyride renders the tooltip. Without this, the dropdown items being spotlighted would not be visible in the DOM. The 60-second auto-resume threshold handles the OAuth redirect case: users who click 'Connect to Spotify' are redirected to Spotify's auth page, then return to ListenBrainz. If they return within 60s, the tour resumes automatically. Beyond 60s, the TourModal prompts them.",
+    "lessons": "Building the first tour revealed that cross-page navigation is not a Joyride concern — it needs to be handled by the application layer. The pause → navigate → observe → resume pattern became the standard that all subsequent tours follow."
+  },
+  {
+    "number": 5,
+    "title": "feat: Add ListensTourManager, StatsTourManager, SocialTourManager",
+    "description": "Implements three feature tours that unlock progressively as users engage with the platform. Listens tour demonstrates BrainzPlayer and queue management. Stats tour walks through 10 chart components across the stats page. Social tour introduces the activity feed, followers, and similar users network.",
+    "status": "merged",
+    "issue": null,
+    "merged_at": "TODO: Add merged date",
+    "url": "TODO: Add PR URL",
+    "files": [
+      "frontend/js/src/components/tours/ListensTourManager.tsx",
+      "frontend/js/src/components/tours/StatsTourManager.tsx",
+      "frontend/js/src/components/tours/SocialTourManager.tsx",
+      "frontend/js/src/brainzplayer/BrainzPlayerSettings.tsx",
+      "frontend/js/src/user/components/follow/FollowerFollowingCards.tsx",
+      "frontend/js/src/user/components/SimilarUsersModal.tsx",
+      "frontend/js/src/add-data/AddData.tsx"
+    ],
+    "details": "Each tour manager follows the same architecture: define steps array with targets and route metadata, use useTour hook for state management, handle cross-page navigation where needed. UI modifications (adding IDs to AddData, BrainzPlayerSettings, FollowerFollowingCards, SimilarUsersModal) were done carefully to avoid breaking existing functionality. IDs were chosen over class names because IDs are stable across theming and style refactors.",
+    "lessons": "Stats tour's 10 steps across a single page proved that MutationObserver handles same-page scrolling cases correctly — the elements are already in the DOM so the observer resolves immediately. The tour's state machine correctly detects this and skips the navigation step."
+  },
+  {
+    "number": 6,
+    "title": "feat: Add Feature Guide hub at /settings/feature-guide/",
+    "description": "Implements the central control hub where users can start, resume, or restart any tour. Tour cards show locked/unlocked state, current status (not started / in progress / completed), and appropriate action buttons. Communicates with TourManagers via native browser CustomEvents.",
+    "status": "merged",
+    "issue": null,
+    "merged_at": "TODO: Add merged date",
+    "url": "TODO: Add PR URL",
+    "files": [
+      "frontend/js/src/settings/FeatureGuide.tsx",
+      "frontend/js/src/settings/feature-guide.scss",
+      "frontend/js/src/onboarding.scss",
+      "frontend/js/src/main.scss",
+      "frontend/js/src/layout/routes/index.tsx",
+      "frontend/js/src/layout/layout.tsx"
+    ],
+    "details": "Feature Guide and TourManager components live in separate React component trees with no shared parent. Browser CustomEvents (window.dispatchEvent / window.addEventListener) bridge the communication gap without introducing shared mutable state or a pub/sub library. Each event listener is registered in useEffect and cleaned up in the return function to prevent memory leaks and duplicate registrations on re-renders.",
+    "lessons": "Native browser events are underrated for decoupling React subtrees. The pattern scales naturally — adding a new tour requires only registering a new event name in the FeatureGuide and the corresponding TourManager, with no changes to any shared infrastructure."
+  }
+]

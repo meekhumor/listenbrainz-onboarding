@@ -1,0 +1,81 @@
+---
+// PRCard.astro
+// Renders a single pull request card from structured data.
+// Used by PRGrid.astro which reads from src/data/prs.json.
+
+const { pr } = Astro.props;
+const {
+  number,
+  title,
+  description,
+  status = "merged",
+  issue,
+  merged_at,
+  url,
+  files = [],
+  details,
+  lessons,
+} = pr;
+
+const statusLabel = { merged: "Merged", open: "Open", draft: "Draft" };
+const statusIcon  = { merged: "⦿", open: "◎", draft: "○" };
+---
+
+<article class="pr-card" id={`pr-${number}`}>
+  <div class="pr-card-header">
+    <div style="flex:1">
+      <div class="pr-card-meta">
+        <span class={`pr-badge ${status}`}>
+          {statusIcon[status]} {statusLabel[status]}
+        </span>
+        {number && (
+          <span>
+            <a href={url || "#"} target="_blank" rel="noopener noreferrer" style="color: var(--color-text-muted); text-decoration: none;">
+              #{number}
+            </a>
+          </span>
+        )}
+        {issue && <span>· Issue #{issue}</span>}
+        {merged_at && <span>· {merged_at}</span>}
+      </div>
+      <h3 class="pr-card-title">
+        {url
+          ? <a href={url} target="_blank" rel="noopener noreferrer">{title}</a>
+          : title
+        }
+      </h3>
+      <p class="pr-card-desc">{description}</p>
+    </div>
+  </div>
+
+  {files.length > 0 && (
+    <div>
+      <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--color-text-faint); margin-bottom: 0.4rem;">
+        Files modified
+      </div>
+      <div class="pr-files">
+        {files.map((f: string) => <span class="pr-file-chip">{f}</span>)}
+      </div>
+    </div>
+  )}
+
+  {(details || lessons) && (
+    <>
+      <button class="pr-detail-toggle" style="margin-top: 1rem;">▼ Show details</button>
+      <div class="pr-details">
+        {details && (
+          <div style="margin-bottom: 1rem;">
+            <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--color-text-faint); margin-bottom: 0.5rem;">Engineering notes</div>
+            <p style="font-size: 0.875rem; color: var(--color-text-muted); margin: 0;">{details}</p>
+          </div>
+        )}
+        {lessons && (
+          <div>
+            <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--color-text-faint); margin-bottom: 0.5rem;">Lessons learned</div>
+            <p style="font-size: 0.875rem; color: var(--color-text-muted); margin: 0;">{lessons}</p>
+          </div>
+        )}
+      </div>
+    </>
+  )}
+</article>
