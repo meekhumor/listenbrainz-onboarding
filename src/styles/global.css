@@ -375,24 +375,25 @@ html:not(.light) .astro-code-dark { display: block; }
 .toc-link:hover { color: var(--color-text); background: var(--color-bg-subtle); }
 .toc-link.active { color: var(--color-accent) !important; font-weight: 500; }
 
-/* ─── PR Badges ─────────────────────────────────────────────────────────────────── */
+/* ─── PR Badges & Cards ─────────────────────────────────────────────────────────── */
 
 .pr-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  padding: 0.15em 0.5em;
+  padding: 0.2em 0.6em;
   border-radius: 9999px;
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
-.pr-badge.merged { background: rgba(168,85,247,0.15); color: #a855f7; }
-.pr-badge.open   { background: rgba(34,197,94,0.15);  color: #22c55e; }
-.pr-badge.draft  { background: var(--color-bg-subtle); color: var(--color-text-muted); }
-
-
+.pr-badge.main    { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+.pr-badge.stacked { background: rgba(99, 102, 241, 0.15); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.3); }
+.pr-badge.merged  { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+.pr-badge.open    { background: rgba(34, 197, 94, 0.15);  color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+.pr-badge.draft   { background: var(--color-bg-subtle); color: var(--color-text-muted); border: 1px solid var(--color-border); }
 
 /* ─── PR Simple List Spacing Fixes ────────────────────────────────────────────── */
 .prose .pr-simple-list {
@@ -400,17 +401,19 @@ html:not(.light) .astro-code-dark { display: block; }
   padding-left: 0 !important;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
 .prose .pr-simple-list li {
   padding-left: 0 !important;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0 !important;
 }
 
 .prose .pr-simple-list li::before {
   display: none !important;
 }
-
 /* ─── Hero Section ─────────────────────────────────────────────────────────────── */
 .hero-section {
   padding: 2rem 0 2rem;
