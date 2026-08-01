@@ -49,22 +49,75 @@ The design plan was as follows:
 
 ### Figma UI Designs & Wireframes
 
-<div className="callout tip" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', margin: '1.25rem 0 2rem', padding: '0.85rem 1.25rem' }}>
-  <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', flex: 1, minWidth: 0 }}>
-    <svg style={{ width: '18px', height: '27px', flexShrink: 0 }} viewBox="0 0 38 57" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M19 28.5C19 23.2533 23.2533 19 28.5 19C33.7467 19 38 23.2533 38 28.5C38 33.7467 33.7467 38 28.5 38H19V28.5Z" fill="#0ACF83"/>
-      <path d="M0 47.5C0 42.2533 4.25329 38 9.5 38H19V47.5C19 52.7467 14.7467 57 9.5 57C4.25329 57 0 52.7467 0 47.5Z" fill="#03A9F4"/>
-      <path d="M0 28.5C0 23.2533 4.25329 19 9.5 19H19V38H9.5C4.25329 38 0 33.7467 0 28.5Z" fill="#F24E1E"/>
-      <path d="M0 9.5C0 4.25329 4.25329 0 9.5 0H19V19H9.5C4.25329 19 0 14.7467 0 9.5Z" fill="#FF7262"/>
-      <path d="M19 0H28.5C33.7467 0 38 4.25329 38 9.5C38 14.7467 33.7467 19 28.5 19H19V0Z" fill="#1ABCFE"/>
+<div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: "1rem",
+    margin: "1.5rem 0",
+    padding: "1rem 1.25rem",
+    background: "#eefafa",
+    border: "1px solid #b7e7e7",
+    borderRadius: "8px",
+  }}
+>
+  {/* Left Section */}
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      gap: "0.85rem",
+      flex: 1,
+      minWidth: 0,
+    }}
+  >
+    <svg
+      width="20"
+      height="30"
+      viewBox="0 0 38 57"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      style={{ flexShrink: 0 }}
+    >
+      <path
+        d="M19 28.5C19 23.2533 23.2533 19 28.5 19C33.7467 19 38 23.2533 38 28.5C38 33.7467 33.7467 38 28.5 38H19V28.5Z"
+        fill="#0ACF83"
+      />
+      <path
+        d="M0 47.5C0 42.2533 4.25329 38 9.5 38H19V47.5C19 52.7467 14.7467 57 9.5 57C4.25329 57 0 52.7467 0 47.5Z"
+        fill="#03A9F4"
+      />
+      <path
+        d="M0 28.5C0 23.2533 4.25329 19 9.5 19H19V38H9.5C4.25329 38 0 33.7467 0 28.5Z"
+        fill="#F24E1E"
+      />
+      <path
+        d="M0 9.5C0 4.25329 4.25329 0 9.5 0H19V19H9.5C4.25329 19 0 14.7467 0 9.5Z"
+        fill="#FF7262"
+      />
+      <path
+        d="M19 0H28.5C33.7467 0 38 4.25329 38 9.5C38 14.7467 33.7467 19 28.5 19H19V0Z"
+        fill="#1ABCFE"
+      />
     </svg>
-    <div style={{ fontSize: '0.875rem', lineHeight: '1.4', color: 'var(--color-text)' }}>
-      <strong>User Onboarding Figma Design</strong>: Interactive tour & UX specs
+
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        fontSize: "0.96rem",
+        color: "var(--ifm-font-color-base)",
+        lineHeight: 1.4,
+      }}
+    >
+      <strong>User Onboarding Figma Design</strong>
+      <span>:&nbsp;Interactive tour &amp; UX specs</span>
     </div>
   </div>
-  <a href="https://www.figma.com/design/ccFFXwpATre3OIeLN2MCi3/User-Onboarding?node-id=0-1&t=TJsWCbYiVd2HFmCb-1" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', background: 'var(--color-bg)', border: '1px solid var(--color-border)', color: 'var(--color-accent)', padding: '0.35rem 0.35rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 600, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0 }}>
-    Open Figma ↗
-  </a>
+
+  {/* Button */}
+  <a href="https://www.figma.com/design/ccFFXwpATre3OIeLN2MCi3/User-Onboarding?node-id=0-1&t=TJsWCbYiVd2HFmCb-1" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", flex: "0 0 auto", height: "36px", padding: "0 16px", background: "#fff", border: "1px solid #d6d6d6", borderRadius: "8px", color: "#222", textDecoration: "none", fontSize: "0.9rem", fontWeight: 600, lineHeight: 1, whiteSpace: "nowrap", boxShadow: "0 1px 2px rgba(0,0,0,0.04)" }}>Open Figma ↗</a>
 </div>
 
 ## Implementation Overview
